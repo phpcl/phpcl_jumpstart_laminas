@@ -1,0 +1,28 @@
+<?= $this->headLink()
+    ->prependStylesheet('https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css');
+?>
+<?= $this->inlineScript()
+    ->prependFile('https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js')
+?>
+<div class="row">
+
+    <div class="col-md-8">
+        <h3 id="page_title">Total Signups by Event</h3>
+        <table id="signups" class="display" style="width:100%">
+            <thead>
+                <tr><th>Event</th><th>Date</th><th>Venue</th><th>City</th><th>Country</th><th>Total</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Event</td><td>Date</td><td>Venue</td><td>City</td><td>Country</td><td>Total</td></tr>
+            </tbodu>
+        </table>
+    </div>
+
+</div>
+<script>
+$(document).ready(function() {
+    $('#signups').DataTable( {
+        "ajax": '/signups/ajax'
+    } );
+} );
+</script>
