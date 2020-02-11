@@ -6,6 +6,7 @@ class ModuleBuilder
 {
     protected $module;      // name of the module
     protected $config;
+    protected $output = '';
 
     const COMPOSER_JSON = 'composer.json';
     const USAGE = 'Usage: php create_module.php PATH MODULE' . "\n"
@@ -22,32 +23,60 @@ class ModuleBuilder
         $this->config = $config;
     }
     /**
+     * @return string $output + "\n"
+     */
+    public function getOutput()
+    {
+        return $this->output . PHP_EOL;
+    }
+    /**
      * Creates everything needed for a Laminas/ZF3 module
      */
     public function buildLamMvcModule()
     {
-        $modBase = $this->config['base'];
         // make base directory for module
-        mkdir($modBase);
+        $modBase = $this->config['base'];
+        $modBase = str_replace('\\', '/', $modBase);
+        if (!file_exists($modBase)) mkdir($modBase);
         // write template contents out to appropriate file
         foreach ($this->config['templates'] as $key => $info) {
-            echo 'Creating structures for ' . $key . "\n";
-            $dir = $modBase . $info['path'];
+            $this->output .= 'Creating structures for ' . $key . "\n";
+            $base = $modBase;
             // make base directory for module/provider file
-            mkdir($dir);
+            foreach (explode('/', $info['path']) as $dir) {
+                $base = str_replace('//', '/', $base . '/' . $dir);
+                if (!file_exists($base)) mkdir($base);
+            }
             // write template to file
-            $filename = $dir . '/' . $info['filename'];
+            $filename = $base . '/' . $info['filename'];
             file_put_contents($filename, $info['template']);
         }
-        echo 'Configuring module registration ' . "\n";
+        // inject module into app primary config file
+        $this->injectConfig();
+        // add module to composer.json autoload key
+        $jsonFile = BASEDIR . '/' . self::COMPOSER_JSON;
+        $this->injectComposerJson($jsonFile);
+    }
+    /**
+     * Injects module name into primary config file
+     *
+     */
+    public function injectConfig()
+    {
+        $this->output .= 'Configuring module registration ' . "\n";
         // callback to inject module name into master config file
         $contents = file_get_contents($this->config['config']);
         $contents = $this->config['insert']($contents, $this->module);
         file_put_contents($this->config['config'], $contents);
-        // add module to composer.json autoload key
-        $jsonFile = BASEDIR . '/' . self::COMPOSER_JSON;
+    }
+    /**
+     * Injects module namespace into composer.json file
+     *
+     */
+    public function injectComposerJson($jsonFile)
+    {
         if (file_exists($jsonFile)) {
-            echo 'Configuring module autoloading ' . "\n";
+            $this->output .= 'Configuring module autoloading ' . "\n";
             // backup file
             copy($jsonFile, $jsonFile . '.bak');
             // build source path

@@ -1,21 +1,19 @@
 <?php
-// this tool creates a Laminas MVC module
-
-// autoloader
-spl_autoload_register(
-    function ($class) {
-        $fn = __DIR__ . '/' . str_replace('\\', '/', $class) . '.php';
-        require $fn;
-    }
-);
+/**
+ * This tool creates a Laminas MVC module
+ * @TODO: rewrite a Laminas Service Manager Tool
+ * See namespace Laminas\ServiceManager\Tool\ {FactoryCreator,FactoryCreatorCommand};
+ */
 
 // set up class for use
+require 'ModuleBuilder.php';
 use Phpcl\Laminas\ModuleBuilder;
 
 // init vars
 $type = '';
 $actual = 0;    // actual valid args
 $expected = 2;  // expected args
+$success = FALSE;
 
 // get base dir and module name from command line
 $baseDir = $argv[1] ?? NULL;
@@ -47,7 +45,7 @@ if ($actual !== $expected) {
 }
 
 // pull in config
-$config = require __DIR__ . '/config/config.php';
+$config = require 'config.php';
 
 // detect type
 foreach ($config as $key => $value) {
@@ -64,11 +62,18 @@ try  {
         case 'zf3' :
         case 'lam' :
             $builder->buildLamMvcModule();
+            $success = TRUE;
             break;
         default :
             echo ERROR_TYPE . "\n";
     }
-    echo 'SUCCESS: ' . $moduleName . ' created!' . "\n";
+    echo $builder->getOutput();
+    if ($success) {
+        echo 'SUCCESS: ' . $moduleName . ' created!' . "\n";
+        shell_exec('composer dump-autoload');
+    } else {
+        echo 'ERROR: unable to create ' . $moduleName . "\n";
+    }
 } catch (Throwable $t) {
     echo 'Oops ... ' . get_class($t) . ':' . $t->getMessage() . "\n";
     echo $t->getTraceAsString() . "\n";
