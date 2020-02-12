@@ -1,13 +1,11 @@
 <?php
 // config for Laminas MVC module creation tool
 
-if (!defined('BASEDIR') || !defined('MODULE_NAME')) {
-    throw new Exception('Must define constants BASEDIR and MODULE_NAME');
-}
+global $moduleName;
+global $baseDir;
 
-$templates = [];
 // module template
-$moduleName = MODULE_NAME;
+$templates = [];
 $templates['lam']['module'] = <<<EOT
 <?php
 declare(strict_types=1);
@@ -36,6 +34,7 @@ return [
             '$routeName' => [
                 'type'    => Segment::class,
                 'options' => [
+                    // add additional params to "route" key if needed
                     'route'    => '/{$routeName}[/:action]',
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
@@ -54,6 +53,20 @@ return [
         'template_path_stack' => [__DIR__ . '/../view'],
     ],
 ];
+EOT;
+// route template
+$templates['lam']['route'] = <<<EOT
+            '{$routeName}-%%SHORT_NAME%%' => [
+                'type'    => Segment::class,
+                'options' => [
+                    // add additional params to "route" key if needed
+                    'route'    => '/{$routeName}-%%SHORT_NAME%%[/:action]',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
 EOT;
 
 // controller template
@@ -74,16 +87,17 @@ EOT;
 
 // view template
 $templates['lam']['view'] = <<<EOT
-<h1>$moduleName Index View</h1>
+<h1>$moduleName View</h1>
+IndexController
 EOT;
 
 return [
     // Laminas MVC
     'lam' => [
         // base directory for the module
-        'base' => BASEDIR . '/module/' . $moduleName,
+        'base' => $baseDir . '/module/' . $moduleName,
         // name of the file that registers modules
-        'config' => BASEDIR . '/config/modules.config.php',
+        'config' => $baseDir . '/config/modules.config.php',
         // function to insert the module name into file named above
         'insert' => function ($contents, $name) {
             if (strpos($contents, "'$name'") === FALSE)
@@ -102,6 +116,9 @@ return [
                 'path'  => '/config',
                 'filename' => 'module.config.php',
             ],
+            'route' => [
+                'template' => $templates['lam']['route'],
+            ],
             'controller' => [
                 'template' => $templates['lam']['controller'],
                 'path'  => '/src/Controller',
@@ -109,7 +126,7 @@ return [
             ],
             'view' => [
                 'template' => $templates['lam']['view'],
-                'path'  => '/view/' . strtolower(MODULE_NAME) . '/index',
+                'path'  => '/view/' . strtolower($moduleName) . '/index',
                 'filename' => 'index.phtml',
             ],
         ],
@@ -117,9 +134,9 @@ return [
     // Zend Framework 3
     'zf3' => [
         // base directory for the module
-        'base' => BASEDIR . '/module/' . $moduleName,
+        'base' => $baseDir . '/module/' . $moduleName,
         // name of the file that registers modules
-        'config' => BASEDIR . '/config/modules.config.php',
+        'config' => $baseDir . '/config/modules.config.php',
         // function to insert the module name into file named above
         'insert' => function ($contents, $name) {
             if (strpos($contents, "'$name'") === FALSE)
@@ -145,7 +162,7 @@ return [
             ],
             'view' => [
                 'template' => $templates['lam']['view'],
-                'path'  => '/view/' . strtolower(MODULE_NAME) . '/index',
+                'path'  => '/view/' . strtolower($moduleName) . '/index',
                 'filename' => 'index.phtml',
             ],
         ],
@@ -154,17 +171,17 @@ return [
     /*
     // Zend Framework 3
     'zf2' => [
-        'config' => BASEDIR . '/config/application.config.php',
+        'config' => $baseDir . '/config/application.config.php',
         'templates' => NULL,
     ],
     // Mezzio
     'mez' => [
-        'config' => BASEDIR . '/config/config.php',
+        'config' => $baseDir . '/config/config.php',
         'templates' => NULL,
     ],
     // Expressive
     'exp' => [
-        'config' => BASEDIR . '/config/config.php',
+        'config' => $baseDir . '/config/config.php',
         'templates' => NULL,
     ],
     */

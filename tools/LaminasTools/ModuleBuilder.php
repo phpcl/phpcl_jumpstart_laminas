@@ -1,17 +1,12 @@
 <?php
 // this tool creates a Laminas modules
-namespace Phpcl\Laminas;
+namespace Phpcl\LaminasTools;
 
 class ModuleBuilder
 {
     protected $module;      // name of the module
     protected $config;
     protected $output = '';
-
-    const COMPOSER_JSON = 'composer.json';
-    const USAGE = 'Usage: php create_module.php PATH MODULE' . "\n"
-                . '    PATH = absolute path to base of your project structure' . "\n"
-                . '    MODULE = name of the new module to create' . "\n";
 
     /**
      * @param string $module == name of the module to be created
@@ -31,8 +26,12 @@ class ModuleBuilder
     }
     /**
      * Creates everything needed for a Laminas/ZF3 module
+     *
+     * @param string $baseDir == absolute path to project base
+     * @param string $moduleName == name of module to build
+     * @return bool TRUE if OK | FALSE otherwise
      */
-    public function buildLamMvcModule()
+    public function buildLamMvcModule(string $baseDir, string $moduleName)
     {
         // make base directory for module
         $modBase = $this->config['base'];
@@ -40,6 +39,9 @@ class ModuleBuilder
         if (!file_exists($modBase)) mkdir($modBase);
         // write template contents out to appropriate file
         foreach ($this->config['templates'] as $key => $info) {
+            // no need to add new route for new module
+            if ($key == 'route') continue;
+            // otherwise, carry on
             $this->output .= 'Creating structures for ' . $key . "\n";
             $base = $modBase;
             // make base directory for module/provider file
@@ -52,28 +54,34 @@ class ModuleBuilder
             file_put_contents($filename, $info['template']);
         }
         // inject module into app primary config file
-        $this->injectConfig();
+        $this->injectConfig($moduleName);
         // add module to composer.json autoload key
-        $jsonFile = BASEDIR . '/' . self::COMPOSER_JSON;
-        $this->injectComposerJson($jsonFile);
+        $jsonFile = $baseDir . '/' . Constants::COMPOSER_JSON;
+        $this->injectComposerJson($jsonFile, $baseDir, $moduleName);
+        return TRUE;
     }
     /**
      * Injects module name into primary config file
      *
+     * @param string $moduleName == name of module to build
+     * @return bool output from `file_get_contents()` operation
      */
-    public function injectConfig()
+    public function injectConfig(string $moduleName)
     {
         $this->output .= 'Configuring module registration ' . "\n";
         // callback to inject module name into master config file
         $contents = file_get_contents($this->config['config']);
-        $contents = $this->config['insert']($contents, $this->module);
-        file_put_contents($this->config['config'], $contents);
+        $contents = $this->config['insert']($contents, $moduleName);
+        return file_put_contents($this->config['config'], $contents);
     }
     /**
      * Injects module namespace into composer.json file
      *
+     * @param string $jsonFile == composer.json
+     * @param string $baseDir == absolute path to project base
+     * @param string $moduleName == name of module to build
      */
-    public function injectComposerJson($jsonFile)
+    public function injectComposerJson(string $jsonFile, string $baseDir, string $moduleName)
     {
         if (file_exists($jsonFile)) {
             $this->output .= 'Configuring module autoloading ' . "\n";
@@ -81,7 +89,7 @@ class ModuleBuilder
             copy($jsonFile, $jsonFile . '.bak');
             // build source path
             $path = str_replace(
-                [BASEDIR, '//'],
+                [$baseDir, '//'],
                 ['', '/'],
                 $this->config['base'] . '/' . $this->config['templates']['module']['path'] . '/');
             if ($path[0] == '/') $path = substr($path, 1);

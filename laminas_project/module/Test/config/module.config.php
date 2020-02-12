@@ -7,6 +7,16 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 return [
     'router' => [
         'routes' => [
+            'test-list' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/test-list[/:action]',
+                    'defaults' => [
+                        'controller' => Controller\ListController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
             'test' => [
                 'type'    => Segment::class,
                 'options' => [
@@ -21,6 +31,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
+            Controller\ListController::class => InvokableFactory::class,
             Controller\IndexController::class => InvokableFactory::class,
         ],
     ],

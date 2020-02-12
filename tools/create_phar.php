@@ -1,10 +1,10 @@
 <?php
 // based upon article by Daniel Opitz (https://odan.github.io/2017/08/16/create-a-php-phar-file.html)
 // location of directory containing code to be included in phar file
-$path = __DIR__ . '/ModuleBuilder/';
+$path = __DIR__ . '/LaminasTools/';
 
 // The php.ini setting phar.readonly must be set to 0
-$pharFile = 'create_module.phar';
+$pharFile = 'laminas-tools.phar';
 
 // clean up
 if (file_exists($pharFile)) {
@@ -26,5 +26,11 @@ $p->setDefaultStub('index.php', '/index.php');
 // plus - compressing it into gzip
 $p->compress(Phar::GZ);
 
+// clean up
+if (file_exists($pharFile . '.gz')) {
+    unlink($pharFile . '.gz');
+}
+
 echo "$pharFile successfully created\n";
 echo "Usage: php $pharFile\n";
+
