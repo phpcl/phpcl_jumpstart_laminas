@@ -1,5 +1,5 @@
 <?php
-namespace Signups\Factory;
+namespace Application\Factory;
 // for future use:
 // use Psr\Container\ContainerInterface;
 use Interop\Container\ContainerInterface;

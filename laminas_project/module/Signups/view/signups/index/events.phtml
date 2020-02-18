@@ -1,4 +1,15 @@
 <h1>Events for <?= $this->year ?> </h1>
-<?php foreach ($this->events as $event) : ?>
-    <?php var_dump($event); ?>
-<?php endforeach; ?>
+<?php if (!empty($this->events)) : ?>
+    <table>
+    <tr><th>Key</th><th>Name</th><th>Date</th></tr>
+    <?php foreach ($this->events as $event) : ?>
+        <tr>
+            <td><?= $event->event_key ?></td>
+            <td><?= $event->event_name ?></td>
+            <td><?= $event->event_date ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </table>
+<?php else : ?>
+No events found
+<?php endif; ?>

@@ -28,9 +28,4 @@ return [
     'view_manager' => [
         'template_path_stack' => [__DIR__ . '/../view'],
     ],
-    'service_manager' => [
-        'factories' => [
-            'Signups\Service\Adapter' => Factory\AdapterFactory::class,
-        ],
-    ],
 ];

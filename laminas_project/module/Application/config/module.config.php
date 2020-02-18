@@ -47,6 +47,8 @@ return [
     'service_manager' => [
         'factories' => [
             Service\Calendar::class => InvokableFactory::class,
+            'Application\Service\Adapter' => Factory\AdapterFactory::class,
+            Models\EventsModel::class => Factory\EventsModelFactory::class,
         ],
     ],
     'view_manager' => [
