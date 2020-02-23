@@ -17,13 +17,17 @@
         "laminas/laminas-db": "^2.11",
         "laminas/laminas-form": "^2.14",
         "laminas/laminas-validator": "^2.13",
-        "laminas/laminas-filter": "^2.9"
+        "laminas/laminas-filter": "^2.9",
+        "laminas/laminas-i18n": "^2.10",
+        "doctrine/common": "^2.12",
+        "laminas/laminas-code": "^3.4"
     },
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
             "Test\\": "module/Test/src/",
-            "Signups\\": "module/Signups/src/"
+            "Signups\\": "module/Signups/src/",
+            "Login\\": "module/Login/src/"
         }
     },
     "autoload-dev": {

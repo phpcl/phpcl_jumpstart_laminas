@@ -1,0 +1,20 @@
+<h1>Forms Demo</h1>
+<hr>
+<h3>Generated From a Discreet Class</h3>
+<?php $this->formFromClass->prepare(); ?>
+<?= $this->form()->openTag($this->formFromClass); ?>
+<?= $this->formCollection($this->formFromClass); ?>
+<?= $this->form()->closeTag(); ?>
+<hr>
+<h3>Generated From Configuration</h3>
+<?php $this->formFromConfig->prepare(); ?>
+<?= $this->form()->openTag($this->formFromConfig); ?>
+<?= $this->formCollection($this->formFromConfig); ?>
+<?= $this->form()->closeTag(); ?>
+<hr>
+<h3>Generated From Annotations</h3>
+<?php $this->formFromAnno->prepare(); ?>
+<?= $this->form()->openTag($this->formFromAnno); ?>
+<?= $this->formCollection($this->formFromAnno); ?>
+<?= $this->form()->closeTag(); ?>
+

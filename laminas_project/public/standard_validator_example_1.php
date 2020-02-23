@@ -2,25 +2,31 @@
 // Composer autoloading
 include __DIR__ . '/../vendor/autoload.php';
 
-use Laminas\Filter\PregReplace;
+use Laminas\Validator\Between;
 
-$options = [
-    'pattern' => '/\d{2,4}-\d{2,4}-\d{2,4}-(\d{2,4})/',
-    'replacement' => 'xxxx-xxxx-xxxx-$1'
-];
-$raw_data = 'Sensitive credit card data: 1111-2222-3333-4444';
+$data      = ['andrew' => 16, 'doug' => 30, 'cal' => 65, 'flintstone' => 200];
+$validator = new Between(['min' => 18, 'max' => 65, 'inclusive' => TRUE]);
 
-echo "\n\n***********************************";
-echo "\nOriginal: ";
-echo "\n***********************************\n";
-echo $raw_data;
-
-echo "\n\n***********************************";
-echo "\nPregReplace: ";
-echo "\n***********************************\n";
-echo (new PregReplace($options))->filter($raw_data);
+foreach ($data as $name => $age) {
+    echo "$name, you entered this for your age: $age\n";
+    if ($validator->isValid($age)) {
+        echo "You are welcome to continue filling out the policy application\n\n";
+    } else {
+        echo "Sorry! " . implode("\n", $validator->getMessages()) . "\n\n";
+    }
+}
 
 // RESULT:
 /*
-Sensitive credit card data: xxxx-xxxx-xxxx-4444
+andrew, you entered this for your age: 18
+You are welcome to continue filling out the policy application
+
+doug, you entered this for your age: 30
+You are welcome to continue filling out the policy application
+
+cal, you entered this for your age: 88
+Sorry! The input is not between '18' and '65', inclusively
+
+flintstone, you entered this for your age: 200
+Sorry! The input is not between '18' and '65', inclusively
 */

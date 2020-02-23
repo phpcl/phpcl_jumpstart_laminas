@@ -13,12 +13,18 @@
         "php": "^7.1",
         "laminas/laminas-component-installer": "^1.0 || ^2.1",
         "laminas/laminas-development-mode": "^3.2",
-        "laminas/laminas-mvc": "^3.1.1"
+        "laminas/laminas-mvc": "^3.1.1",
+        "laminas/laminas-db": "^2.11",
+        "laminas/laminas-form": "^2.14",
+        "laminas/laminas-validator": "^2.13",
+        "laminas/laminas-filter": "^2.9",
+        "laminas/laminas-i18n": "^2.10"
     },
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
-            "Test\\": "module/Test/src/"
+            "Test\\": "module/Test/src/",
+            "Signups\\": "module/Signups/src/"
         }
     },
     "autoload-dev": {
