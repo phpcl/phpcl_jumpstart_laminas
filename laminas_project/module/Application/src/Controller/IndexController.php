@@ -32,4 +32,10 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
+    public function passParamsAction()
+    {
+        $em = $this->getEvent()->getApplication()->getEventManager();
+        $em->trigger('custom-event', $this, ['line' => __LINE__]);
+        return new ViewModel();
+    }
 }
