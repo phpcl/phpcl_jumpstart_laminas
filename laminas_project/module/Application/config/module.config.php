@@ -37,11 +37,23 @@ return [
                     ],
                 ],
             ],
+            'application-calendar' => [
+                'type'    => Segment::class,
+                'options' => [
+                    // add additional params to "route" key if needed
+                    'route'    => '/application-calendar[/:action]',
+                    'defaults' => [
+                        'controller' => Controller\CalendarController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => Controller\IndexControllerFactory::class,
+            Controller\IndexController::class => InvokableFactory::class,
+            Controller\CalendarController::class => Controller\CalendarControllerFactory::class,
         ],
     ],
     'service_manager' => [

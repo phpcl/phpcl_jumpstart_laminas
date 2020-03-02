@@ -1,2 +1,5 @@
 <h1>Signups View</h1>
-IndexController
+<ul>
+    <li><a href="<?= $this->url('signups', ['action' => 'events']); ?>">Events List Using Adapter Query</a></li>
+    <li><a href="<?= $this->url('signups', ['action' => 'events-using-table']); ?>">Events List Using TableGateway</a></li>
+</ul>
