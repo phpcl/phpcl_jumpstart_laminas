@@ -16,6 +16,9 @@ Source Code for PHP-CL Laminas JumpStart Course
 docker pull asclinux/linuxforphp-8.2-ultimate:7.4-nts
 ```
 * Make a note of the image and tag (hereafter referred to as `IMAGE` and `TAG`)
+```
+docker image ls
+```
 * Create a volume `jumpstart_laminas`
 ```
 docker volume create jumpstart_laminas
@@ -37,7 +40,7 @@ docker container ls
 ```
 docker exec -it <container_ID> /bin/bash
 // or
-docker exec -it phpcl_jumpstart_laminas /bin/bash
+docker exec -it jumpstart_laminas /bin/bash
 ```
 * Restore files from repo for course
 ```
@@ -47,7 +50,9 @@ git clone https://github.com/phpcl/phpcl_jumpstart_laminas
 * Restore database and assign privileges
 ```
 # mysql
-MariaDB [(none)]>
+```
+* From the database prompt (e.g `MariaDB [(none)]>`):
+```
 CREATE DATABASE `jumpstart`;
 USE `jumpstart`;
 CREATE USER 'test'@'localhost' IDENTIFIED BY 'password';
@@ -59,11 +64,22 @@ FLUSH PRIVILEGES;
 SOURCE /srv/jumpstart/phpcl_jumpstart_laminas/sample_data/jumpstart.sql;
 exit
 ```
-* Connect repo to container web server
+* Get the demo project running
 ```
-ln -s /srv/jumpstart/phpcl_jumpstart_laminas /srv/www/jumpstart
+cd /srv/jumpstart/phpcl_jumpstart_laminas/laminas_project
+php composer.phar self-update
+php composer.phar install
 ```
-* Access container web site from your browser
+* Connect Laminas demo project to container web server
 ```
-http://localhost:8181/jumpstart
+echo /srv/jumpstart/phpcl_jumpstart_laminas/laminas_project/laminas.conf >>/etc/httpd/httpd.conf
+ln -s /srv/jumpstart/phpcl_jumpstart_laminas/laminas_project/public /srv/www/laminas
+```
+* Restart web server
+```
+/etc/init.d/httpd restart
+```
+* Access Laminas demo web site from your browser
+```
+http://localhost:8181/laminas
 ```
