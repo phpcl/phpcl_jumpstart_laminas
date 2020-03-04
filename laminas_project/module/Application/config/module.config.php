@@ -58,9 +58,10 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            Service\Calendar::class => InvokableFactory::class,
-            'Application\Service\Adapter' => Factory\AdapterFactory::class,
             Models\EventsModel::class => Factory\EventsModelFactory::class,
+            Service\Calendar::class => InvokableFactory::class,
+            // NOTE: "Application\Service\Adapter" is not an actual class
+            Service\Adapter::class => Factory\AdapterFactory::class,
         ],
     ],
     'view_manager' => [
