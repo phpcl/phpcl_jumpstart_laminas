@@ -20,10 +20,11 @@ vendor/bin/laminas-tools.bat WHAT PATH NAME
 ### Params
 | Param | Example | Description |
 | :---: | :-----: | :---------- |
-| WHAT  | "module" or "controller" | Describes what component you want to build |
+| WHAT  | "module" or "controller" or "factory" | Describes what component you want to build |
 | PATH  | "/path/to/project" | Full path to your project root directory |
 | NAME  | "Test"  | Name of the module you want to create, or |
 |       | "Test\\\Controller\\\ListController" | Name of the controller you want to create |
+|       | "Test\\\Service\\\ListService" | Name of the class for which you want to create a factory |
 
 ## TODO
 * Create RESTful controllers
