@@ -1,8 +1,9 @@
+<?php use Application\Module; ?>
 <div class="jumbotron">
     <h1>Passing Params</h1>
 
     <pre>
-    <?php readfile(__DIR__ . '/../../../../../data/param.log'); ?>
+    <?php readfile(Module::PARAM_LOG); ?>
     </pre>
 
 </div>

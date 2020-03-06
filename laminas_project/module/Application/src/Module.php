@@ -15,6 +15,7 @@ use Laminas\EventManager\EventInterface;
 
 class Module
 {
+    const PARAM_LOG = __DIR__ . '/../../../data/param.log';
     public function getConfig() : array
     {
         return include __DIR__ . '/../config/module.config.php';
@@ -34,13 +35,12 @@ class Module
     }
     public function passParams(EventInterface $e)
     {
-        $paramLog = __DIR__ . '/../../../data/param.log';
         $triggerClass  = $e->getTarget();
         $triggerParams = $e->getParams();
         $message = date('Y-m-d H:i:s') . ':'
                  . __METHOD__
                  . ':CLASS:' . get_class($triggerClass)
                  . ':LINE:' . $triggerParams['line'] . "\n" ;
-        error_log($message, 3, $paramLog);
+        error_log($message, 3, self::PARAM_LOG);
     }
 }
