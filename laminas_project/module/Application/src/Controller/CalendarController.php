@@ -13,9 +13,8 @@ class CalendarController extends AbstractActionController
     }
     public function indexAction()
     {
-        $lang = $this->params()->fromQuery('lang', Calendar::DEFAULT_LANG);
         $year = $this->params()->fromQuery('year', date('Y'));
-        $cal = $this->cal->getCalendar($lang, (int) $year);
+        $cal = $this->cal->getCalendar((int) $year);
         return new ViewModel(['cal' => $cal]);
     }
 }
