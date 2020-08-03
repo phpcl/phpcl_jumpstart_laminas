@@ -1,0 +1,24 @@
+version: "3"
+services:
+  phpcl-jumpstart-laminas:
+    container_name: phpcl_jumpstart_laminas
+    hostname: jumpstart-laminas
+    image: asclinux/linuxforphp-8.2-ultimate:7.4-nts
+    volumes:
+     - ".:/srv/tempo/home"
+    ports:
+     - "8181:80"
+     - "10443:443"
+     - "2222:22"
+    build: ./docker
+    restart: always
+    command: lfphp --apache --mysql --phpfpm </dev/null >/dev/null 2&>1 &
+    networks:
+      app_net:
+        ipv4_address: 172.16.1.99
+networks:
+  app_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.1.0/24"
