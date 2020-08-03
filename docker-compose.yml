@@ -10,9 +10,8 @@ services:
      - "8181:80"
      - "10443:443"
      - "2222:22"
-    build: ./docker
+    build: .
     restart: always
-    command: lfphp --apache --mysql --phpfpm </dev/null >/dev/null 2&>1 &
     networks:
       app_net:
         ipv4_address: 172.16.1.99
