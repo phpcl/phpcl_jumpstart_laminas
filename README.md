@@ -1,5 +1,4 @@
-# phpcl_jumpstart_laminas
-Source Code for PHP-CL Laminas JumpStart Course
+# Source Code for PHP-CL Laminas JumpStart Course
 
 ## VM
 * Install `docker`
@@ -15,71 +14,39 @@ Source Code for PHP-CL Laminas JumpStart Course
 ```
 docker pull asclinux/linuxforphp-8.2-ultimate:7.4-nts
 ```
-* Make a note of the image and tag (hereafter referred to as `IMAGE` and `TAG`)
+* Install `docker-compose`
+  * https://docs.docker.com/compose/install/
+* Clone this repository into some directory (which we call here `/path/to/repo`)
 ```
-docker image ls
+git clone https://github.com/phpcl/phpcl_jumpstart_laminas /path/to/repo
 ```
-* Create a volume `jumpstart_laminas`
+* Build the image on your host computer
 ```
-docker volume create jumpstart_laminas
+cd /path/to/repo
+docker-compose build
 ```
-* Identify the location
+* Bring the container online.  The `-d` flag makes it run in background.
 ```
-docker volume ls
-docker volume inspect jumpstart_laminas
-```
-* Run PHP for Linux image and mount the volume.  Replace `IMAGE` and `TAG` with the values recorded above.
-```
-docker run -dit --restart=always --name jumpstart_laminas -v ${PWD}/:/srv/www -p 8181:80 -p 10443:443 -p 2222:22 --mount source=jumpstart_laminas,target=/srv/jumpstart IMAGE:TAG lfphp
-```
-* Get container ID
-```
-docker container ls
+docker-compose up -d
 ```
 * Open a shell to the container
 ```
 docker exec -it <container_ID> /bin/bash
 // or
-docker exec -it jumpstart_laminas /bin/bash
+docker exec -it phpcl_jumpstart_laminas /bin/bash
 ```
-* Restore files from repo for course
-```
-cd /srv/jumpstart
-git clone https://github.com/phpcl/phpcl_jumpstart_laminas
-```
-* Restore database and assign privileges
-```
-# mysql
-```
-* From the database prompt (e.g `MariaDB [(none)]>`):
-```
-CREATE DATABASE `jumpstart`;
-USE `jumpstart`;
-CREATE USER 'test'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON `jumpstart`.`events` TO 'test'@'localhost';
-GRANT ALL PRIVILEGES ON `jumpstart`.`hotels` TO 'test'@'localhost';
-GRANT ALL PRIVILEGES ON `jumpstart`.`signup` TO 'test'@'localhost';
-GRANT ALL PRIVILEGES ON `jumpstart`.`users` TO 'test'@'localhost';
-FLUSH PRIVILEGES;
-SOURCE /srv/jumpstart/phpcl_jumpstart_laminas/sample_data/jumpstart.sql;
-exit
-```
-* Get the demo project running
-```
-cd /srv/jumpstart/phpcl_jumpstart_laminas/laminas_project
-php composer.phar self-update
-php composer.phar install
-```
-* Connect Laminas demo project to container web server
-```
-echo /srv/jumpstart/phpcl_jumpstart_laminas/laminas_project/laminas.conf >>/etc/httpd/httpd.conf
-ln -s /srv/jumpstart/phpcl_jumpstart_laminas/laminas_project/public /srv/www/laminas
-```
-* Restart web server
-```
-/etc/init.d/httpd restart
-```
+  * The repository gets cloned inside the container into this directory: `/srv/tempo/jumpstart`
+  * The `/path/to/repo` directory on your host computer is mapped inside the container as: `/srv/tempo/home`
 * Access Laminas demo web site from your browser
+  * You can use `localhost` like this:
 ```
 http://localhost:8181/laminas
+```
+  * Or you can use the IP address of the container like this:
+```
+http://172.16.1.99/laminas
+```
+* When you're done, exit the shell and stop the container as follows:
+```
+docker-compose down
 ```

@@ -19,6 +19,9 @@ RUN \
 	mysql -uroot -v -e "FLUSH PRIVILEGES;" && \
 	mysql -uroot -e "SOURCE /srv/tempo/jumpstart/sample_data/jumpstart.sql;" jumpstart
 RUN \
+	echo "Installing phpMyAdmin ..." && \
+	lfphp-get phpmyadmin
+RUN \
 	echo "Updating existing Laminas project ..." && \
 	cd /srv/tempo/jumpstart/laminas_project && \
 	php composer.phar self-update && \
