@@ -46,6 +46,11 @@ http://localhost:8181/laminas
 ```
 http://172.16.1.99/laminas
 ```
+* Database access
+  * From the main web page click on the `phpMyAdmin` link
+  * Username: `test`
+  * Password: `password`
+  * Database Name: `jumpstart`
 * When you're done, exit the shell and stop the container as follows:
 ```
 docker-compose down
