@@ -24,7 +24,6 @@ RUN \
 RUN \
 	echo "Updating existing Laminas project ..." && \
 	cd /srv/tempo/jumpstart/laminas_project && \
-	php composer.phar self-update && \
 	php composer.phar install
 RUN \
 	echo "Configuring Apache ..." && \
@@ -32,5 +31,4 @@ RUN \
 	ln -s /srv/tempo/jumpstart/laminas_project/public /srv/www/demo && \
 	ln -s /srv/tempo/jumpstart/my_project/public /srv/www/my && \
 	/etc/init.d/httpd start
-ENTRYPOINT ["/bin/lfphp"]
-CMD ["--mysql", "--phpfpm", "--apache"]
+CMD lfphp --mysql --phpfpm --apache
